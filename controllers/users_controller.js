@@ -4,7 +4,9 @@ const { User } = db;
 
 users.get('/', async (req, res) => {
     try {
-        const foundUsers = await User.findAll();
+        const foundUsers = await User.findAll({
+            order: [[ 'personality_type', 'ASC' ]]
+        });
         res.status(200).json(foundUsers);
     } catch (e) {
         res.status(500).json(e);
