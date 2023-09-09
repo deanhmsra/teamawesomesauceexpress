@@ -1,11 +1,18 @@
 const users = require('express').Router();
 const db = require('../models');
+const { Op } = require('sequelize');
 const { User } = db;
 
 users.get('/', async (req, res) => {
+    const { user_first_name = '' } = req.query;
     try {
         const foundUsers = await User.findAll({
-            order: [[ 'personality_type', 'ASC' ]]
+            order: [[ 'user_first_name', 'ASC' ], [ 'user_last_name', 'ASC']],
+            where: {
+                user_first_name: {
+                    [Op.iLike] : `%${user_first_name}%`
+                }
+            }
         });
         res.status(200).json(foundUsers);
     } catch (e) {
